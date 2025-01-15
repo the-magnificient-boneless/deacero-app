@@ -1,22 +1,6 @@
 version: "3.8"
 
 services:
-  eplatform:
-    container_name: alfred-app-eplatform
-    build: ./eplatform
-    ports:
-      - "3001:3001"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - ./eplatform:/usr/src/app
-      - /usr/src/app/node_modules
-    networks:
-      - alfred-net
-    depends_on:
-      - mongo
-      - backend
-
   documentation:
     container_name: alfred-app-documentation
     build: ./documents-simple-next-js-documentation
@@ -26,22 +10,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
       - ./documents-simple-next-js-documentation:/usr/src/app
-      - /usr/src/app/node_modules
-    networks:
-      - alfred-net
-    depends_on:
-      - mongo
-      - backend
-
-  backoffice:
-    container_name: alfred-app-backoffice
-    build: ./backoffice
-    ports:
-      - "5001:5001"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - ./backoffice:/usr/src/app
       - /usr/src/app/node_modules
     networks:
       - alfred-net
