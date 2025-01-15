@@ -1,0 +1,52 @@
+---
+title: Security
+description: An overview of the security features.
+keywords: ["security", "guide", "documents"]
+---
+
+MongoDB offers robust security features to ensure that your data is protected against
+unauthorized access, loss, or tampering. This documentation provides an overview
+of the security features, configurations, and best practices to help safeguard your
+MongoDB deployment.
+
+<Note title="Pending" type="warning">
+  In the production environment, the database should be configured with strong
+  security measures, including authentication, encrypted connections, and access
+  control. Proper backups, monitoring, and logging should also be enabled to
+  ensure data integrity and availability.
+</Note>
+## Technical desitions
+
+MongoDB was implemented without an admin and password for `dev` environment, is a common practice during the initial stages of development or testing. There are several reasons why this approach was adopted:
+
+### 1. Speed and Simplicity
+
+- Quick Setup: Setting up MongoDB without authentication (i.e., without creating an admin user or passwords) allows developers to quickly start working without the need for additional configuration steps related to security.
+- No Authentication Overhead: During development, there’s no immediate need for complex authentication processes. This simplifies interactions with the database and speeds up the development cycle since developers can connect directly to MongoDB without the need to handle authentication each time.
+
+### 2. Convenience During Development
+
+- Frequent Changes: Developers often need to make changes to the database schema, documents, or even add/remove users frequently during development. Disabling authentication removes the need to manually update users or permissions each time, which can be cumbersome.
+- No Restrictions: With authentication disabled, developers can quickly test different queries, run scripts, or connect to the database from multiple tools without worrying about permission issues or credentials.
+
+### 3. Isolation from Production
+
+- Non-sensitive Data: In a local development environment, the data is often not sensitive. There may be no personal, financial, or regulatory concerns about unauthorized access since the data is temporary and used for testing or learning purposes.
+- No Risk of Sensitive Information Exposure: Since the database is isolated from the production environment, there’s little risk of sensitive information being compromised. Developers can test features or configurations without worrying about the security implications of connecting to production systems.
+
+### 4. Less Complexity for Prototyping and Testing
+
+- Rapid Prototyping: When rapidly prototyping or testing features, simplicity and speed are often more important than strict security. Disabling authentication allows developers to focus on building and testing the core functionality of their application without spending time on setting up user permissions or managing roles.
+- Collaborative Work: Developers often collaborate in a shared local environment where everyone needs access to the database. Disabling authentication makes it easier for all team members to work on the same development environment without worrying about managing user access.
+
+### 5. Avoiding Configuration Issues
+
+- Less Room for Errors: When authentication is disabled, you eliminate the chance of misconfiguring user permissions, roles, or access controls, which can be problematic when initially setting up a new development environment.
+- Focus on Features Over Security: During development, it’s common to prioritize building features and functionality over security considerations. While this approach is not recommended for production, it can help streamline the development process.
+
+### Important Considerations
+
+- Security: While working without an admin or password is fine for local development, it’s essential to enable authentication when deploying to production or shared environments. Leaving the database open without authentication can lead to security risks, especially if the database is exposed to the internet or accessed by unauthorized individuals.
+- Transition to Production: Once development progresses to the stage where the application is ready to be deployed to production, it's crucial to implement proper authentication, role-based access control, and encryption to protect your data and ensure compliance with security best practices.
+
+In summary, working without an admin and password in a development environment is a practical decision aimed at minimizing setup complexity and speeding up the development process. However, it should be done with the understanding that proper security measures will be applied when the application is moved to production.

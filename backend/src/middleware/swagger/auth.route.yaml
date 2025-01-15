@@ -1,0 +1,51 @@
+openapi: 3.0.0
+info:
+  title: API Key Authentication
+  version: 1.0.0
+  description: API documentation for the auth Service
+tags:
+  - name: auth
+    description: Everything about user auth -  ⚠️ API key required!, testing credentials included.
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+paths:
+  /auth/apiKey:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - auth
+      summary: Authenticate using API Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                apiKey:
+                  type: string
+                  example: APIKEY1234567890
+                  default: APIKEY1234567890
+      responses:
+        "200":
+          description: Successfully authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlLZXkiOiJBUElLRVkxMjM0NTY3ODkwIiwiaWF0IjoxNzE5MDc4Njc4LCJleHAiOjE3MTkwODIyNzh9.7dy_glN3IUTFuIBuSGij00758SR9mWN_-7Bn0pSKys8
+        "401":
+          description: Invalid API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid API key

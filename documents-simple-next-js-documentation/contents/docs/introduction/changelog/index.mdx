@@ -1,0 +1,67 @@
+---
+title: Changelog
+description: Changelogs and improvements to the Documents projects.
+keywords: ["changelog", "guide", "nextjs", "documents"]
+---
+
+## Sample Changelog
+
+This changelog provides an overview of updates, new features, bug fixes, and other changes made to the API over time. Please refer to this section regularly to stay updated with the latest changes.
+
+### Version 1.3.0 - January 15, 2025
+
+#### New Features:
+
+Added pagination support to the GET /products endpoint to handle large datasets more efficiently.
+Introduced bulk update functionality for stock adjustments via the new POST /products/bulk-update endpoint.
+
+#### Improvements:
+
+Enhanced API response times by optimizing database queries.
+Updated error messages for better clarity and debugging.
+
+#### Bug Fixes:
+
+Fixed an issue where the PUT /categories/:id endpoint returned incorrect HTTP status codes.
+Resolved a problem with inconsistent timestamps in the createdAt and updatedAt fields.
+
+### Version 1.2.0 - December 10, 2024
+
+#### New Features:
+
+Added support for product search by SKU and name in the GET /products endpoint.
+Introduced the ability to sort results by price, stock level, and category.
+
+#### Improvements:
+
+Improved security by implementing rate limiting and updated JWT authentication validation.
+Enhanced logging for all API operations.
+
+#### Bug Fixes:
+
+Fixed an error causing incorrect category associations when creating products.
+Version 1.1.0 - November 5, 2024
+
+#### New Features:
+
+Added support for categories with CRUD operations via the new /categories endpoints.
+Introduced the ability to manage price discounts for products.
+
+#### Improvements:
+
+Updated database schema to include indexes for faster query performance.
+Improved API documentation with detailed examples for all endpoints.
+
+#### Bug Fixes:
+
+Resolved an issue where the DELETE /products/:id endpoint failed to cascade deletions.
+Version 1.0.0 - October 1, 2024
+Initial release of the Inventory Management API.
+
+#### Features:
+
+CRUD operations for products.
+Stock level management.
+Basic authentication using JWT.
+Detailed API documentation with examples.
+This changelog will be updated as new features and improvements are introduced. Feedback is always welcome!

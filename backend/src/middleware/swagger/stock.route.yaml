@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  title: Stock Service API
+  version: 1.0.0
+  description: API documentation for the Stock Service
+tags:
+  - name: stock
+    description: (Pending to implement endpoint) Endpoint related to stock information.
+paths:
+  /stock:
+    get:
+      tags:
+        - stock
+      summary: Stock endpoint
+      description: This endpoint is currently pending implementation.
+      responses:
+        "200":
+          description: Pending
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "This endpoint is pending implementation."
+        "500":
+          description: Internal server error
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

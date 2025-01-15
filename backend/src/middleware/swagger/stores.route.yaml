@@ -1,0 +1,213 @@
+openapi: 3.0.0
+info:
+  title: Stores Management API
+  version: 1.0.0
+  description: API for managing products/stores
+tags:
+  - name: stores
+    description: Everything about managing products/stores - ⚠️ Auth Bearer token required!
+paths:
+  /stores:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - stores
+      summary: Create or update a store
+      description: Endpoint to create or update a store in the collection.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemaDefinition:
+                  type: object
+                  description: Definition of the schema for the store.
+                  properties:
+                    name:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: String
+                        default:
+                          type: boolean
+                          example: false
+                    description:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: String
+                        default:
+                          type: boolean
+                          example: false
+                    address:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: String
+                        default:
+                          type: boolean
+                          example: false
+                    id_store:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: String
+                        default:
+                          type: boolean
+                          example: false
+                schemaOptions:
+                  type: object
+                  description: Additional schema options.
+                  properties:
+                    strict:
+                      type: boolean
+                      example: true
+                    timestamps:
+                      type: boolean
+                      example: true
+                collection:
+                  type: string
+                  description: Name of the MongoDB collection.
+                  example: stores
+                uniqueness:
+                  type: array
+                  description: Fields to enforce uniqueness on.
+                  items:
+                    type: string
+                  example: ["id_store"]
+                notification:
+                  type: object
+                  description: Notification details.
+                  properties:
+                    title:
+                      type: string
+                      example: Tienda guardada!
+                    message:
+                      type: string
+                      example: "[name] se ha guardado correctamente."
+                    callToAction:
+                      type: string
+                      example: Ver Tienda
+                    find:
+                      type: object
+                      properties:
+                        id_store:
+                          type: string
+                          example: TN
+                    sort:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: integer
+                          example: -1
+                formData:
+                  type: object
+                  description: Data to save in the collection.
+                  properties:
+                    id_store:
+                      type: string
+                      example: TN
+                    name:
+                      type: string
+                      example: Tienda Nueva
+                    description:
+                      type: string
+                      example: >
+                        Tienda con espacio para almacenamiento, estacionamiento.
+                    address:
+                      type: string
+                      example: |
+                        Calle No. 11, Col. Conocida, Municipio: C. Izcalli, Estado de México
+      responses:
+        "200":
+          description: Successful creation or update
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Store saved successfully."
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "An error occurred."
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - stores
+      summary: Retrieve stores
+      description: Endpoint to retrieve stores with optional filters, pagination, and limits.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                collection:
+                  type: string
+                  description: Name of the MongoDB collection.
+                  example: stores
+                page:
+                  type: integer
+                  description: Page number for pagination.
+                  example: 1
+                limit:
+                  type: integer
+                  description: Number of items per page.
+                  example: 5
+                filters:
+                  type: object
+                  description: Filters to apply when retrieving data.
+                  properties:
+                    id_store:
+                      type: string
+                      example: TN
+      responses:
+        "200":
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                  pagination:
+                    type: object
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "An error occurred."
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

@@ -1,0 +1,47 @@
+---
+title: Schema Definition
+description: How to use Dynamic Schema Definition in Mongoose.
+keywords: ["schema definition", "guide", "documents"]
+---
+
+<Note title="Note" type="warning">
+  ⚠️ This information is strongly recommended to read!
+</Note>
+
+Dynamic schema definition in Mongoose allows creating models at runtime based on
+custom configurations. This approach is particularly useful for applications needing
+to handle multiple collections with varying data structures without predefining each
+schema.
+
+## Technical decisions
+
+### Advantages
+
+- Reusability: Supports managing multiple collections dynamically without redundant code.
+- Scalability: Ideal for systems requiring flexible or customizable data structures.
+- Validation Integration: Controls which data is accepted into the database.
+
+### Considerations
+
+- Data Consistency: Using `strict: false` or flexible schemas can lead to inconsistencies, this time is disabled.
+- Performance: Creating dynamic models in every request can be costly; reusing existing models is recommended. For initial release performance is not considered.
+- Field Validation: Ensuring proper validation of schema data is critical to avoid errors or vulnerabilities.
+
+### Key Features
+
+    1. Flexibility:
+        - Schemas are built dynamically using a configuration object (schemaDefinition).
+        - This enables managing multiple data structures without manually defining numerous models.
+    2. Dynamic Configuration:
+        - `schemaDefinition`: Defines fields and their types, such as String, Number, or Date.
+        - `schemaOptions`: Configures additional options like timestamps to automatically add createdAt and updatedAt.
+        - `collection`: Specifies the database collection where documents will be stored.
+    3. Validation:
+        - Before creating a model, each field in `schemaDefinition` is validated to ensure it includes at least a `type`.
+        - This ensures data adheres to the schema's constraints.
+    4. `strict` Mode Compatibility:
+        - By default, Mongoose only saves fields defined in the schema.
+        - Setting strict: false allows inclusion of additional properties not defined in the schema.
+        - ⚠️ `strict:false` pending to implement.
+    5. Model Reuse:
+        - If a model for a collection is already registered, it is reused to avoid conflicts.

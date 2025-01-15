@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  title: Product Service API
+  version: 1.0.0
+  description: API documentation for the Product Service
+tags:
+  - name: products
+    description: Everything about products ⚠️ Auth Bearer token required!
+paths:
+  /products:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - products
+      summary: Get Products with Pagination
+      description: Retrieves a list of products with optional filters.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                collection:
+                  type: string
+                  description: Collection name (e.g., products)
+                page:
+                  type: integer
+                  description: Page number for pagination
+                  example: 1
+                limit:
+                  type: integer
+                  description: Number of items per page
+                  example: 5
+                filters:
+                  type: object
+                  description: Filters for the products
+                  properties:
+                    category:
+                      type: string
+                      description: Product category to filter
+                    minPrice:
+                      type: number
+                      description: Minimum price for filtering
+                    maxPrice:
+                      type: number
+                      description: Maximum price for filtering
+      responses:
+        "200":
+          description: List of products retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Product ID
+                    name:
+                      type: string
+                      description: Product name
+                    description:
+                      type: string
+                      description: Product description
+                    category:
+                      type: string
+                      description: Product category
+                    price:
+                      type: number
+                      description: Product price
+                    stock:
+                      type: integer
+                      description: Product stock
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - products
+      summary: Create a New Product
+      description: Creates a new product in the collection.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schemaDefinition:
+                  type: object
+                  description: Dynamic schema definition for the collection.
+                schemaOptions:
+                  type: object
+                  description: Additional schema options.
+                  properties:
+                    strict:
+                      type: boolean
+                      description: Strict schema enforcement.
+                    timestamps:
+                      type: boolean
+                      description: Add timestamps to the schema.
+                collection:
+                  type: string
+                  description: Name of the collection.
+                uniqueness:
+                  type: array
+                  items:
+                    type: string
+                  description: Fields to enforce uniqueness.
+                notification:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Notification title.
+                    message:
+                      type: string
+                      description: Notification message.
+                    callToAction:
+                      type: string
+                      description: Call to action text.
+                formData:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Product ID
+                    name:
+                      type: string
+                      description: Product name
+                    description:
+                      type: string
+                      description: Product description
+                    category:
+                      type: string
+                      description: Product category
+                    price:
+                      type: number
+                      description: Product price
+                    sku:
+                      type: string
+                      description: Product SKU
+                    stock:
+                      type: integer
+                      description: Product stock
+      responses:
+        "201":
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Product ID
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

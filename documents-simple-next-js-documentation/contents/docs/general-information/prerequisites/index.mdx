@@ -1,0 +1,79 @@
+---
+title: Prerequisites
+description: Before you start integrating and consuming the application, ensure that you meet the following requirements. These prerequisites are essential to set up your environment, authenticate successfully, and make API requests without issues. By fulfilling these conditions, you’ll streamline the integration process and avoid common pitfalls.
+keywords: ["tools", "guide", "documents"]
+---
+
+## Prerequisites for Consuming this API (e.g., Postman)
+
+When developing or interacting with APIs, it’s crucial to have the right tools for testing and consuming API endpoints. Postman is a popular tool for this purpose, offering an easy-to-use interface to make HTTP requests, inspect responses, and automate tests. Here’s a summary of the prerequisites and tools needed to effectively consume an API using Postman:
+
+### 1. Postman Setup
+
+Postman is an API development tool that simplifies the process of consuming and testing RESTful APIs. Before using Postman, ensure the following:
+
+- Installation: Download and install the Postman application on your machine. It is available for Windows, macOS, and Linux.
+- Account Setup (Optional): While Postman can be used without an account, creating an account allows you to sync your collections and workspaces across devices.
+  API Endpoint URL: To consume an API, you’ll need the base URL of the API endpoint, along with any required paths, query parameters, or authentication tokens.
+
+### 2. API Understanding
+
+Before sending requests to an API, it’s important to understand the following:
+
+- HTTP Methods: APIs often use standard HTTP methods like GET, POST, PUT, DELETE, etc. Each method has a specific purpose:
+- GET: Retrieve data from the server.
+- POST: Send data to the server to create a new resource.
+- PUT: Update existing data on the server.
+- DELETE: Remove a resource from the server.
+- Request Headers: Some APIs require specific headers for content type (e.g., Content-Type: application/json), authentication (e.g., Authorization: Bearer token), or other custom requirements.
+- Request Body: For POST or PUT requests, you may need to send a body with your request, typically in JSON or XML format.
+
+### 3. Authentication
+
+This API require authentication to ensure secure access. Common authentication method below:
+
+- API Keys: A unique key that’s passed with the request to authenticate the client.
+- Bearer Tokens: A token issued after login or authorization, often included in the header.
+  <Note title="Notes" type="warning">
+    The sample Auth method can be located at `Swagger`.
+  </Note>
+
+### 4. Consuming the API with Postman
+
+Once you have Postman installed and have gathered the necessary information (API URL, authentication details, etc.), you can take a look at these sections:
+
+<CardGrid>
+  <Card
+    title="Swagger"
+    href="/docs/usage/swagger"
+    icon="alignJustify"
+    variant="small"
+    description="Swagger documentation"
+  />
+  <Card
+    title="Swagger WebUI"
+    href="http://localhost:5000/api/v0/docs/"
+    icon="alignJustify"
+    external={true}
+    variant="small"
+  />
+  <Card
+    title="Postman Collection"
+    href="https://aaa999-5139.postman.co/workspace/0910681a-80bc-4bc0-80d8-9f488d421ec7"
+    icon="alignJustify"
+    external={true}
+    variant="small"
+  />
+</CardGrid>
+
+### 6. Automation and Testing (Optional)
+
+Postman also offers the ability to automate and script API tests:
+
+- Tests: Write tests to assert the correctness of the API response (e.g., check if the status code is 200, verify the response body).
+- Collection Runner: Run a series of API requests as a collection to test an entire workflow.
+- Monitors: Set up monitors to run tests on a schedule and track API performance over time.
+
+### Conclusion
+
+Postman is a versatile and user-friendly tool for consuming APIs. To effectively use it, ensure you have the correct API details (endpoint URL, authentication), understand the HTTP methods, and be prepared to handle headers and request bodies. With Postman, developers can easily test, debug, and automate their interactions with APIs, streamlining the development process.

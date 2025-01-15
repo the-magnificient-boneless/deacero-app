@@ -1,0 +1,35 @@
+---
+title: Security
+description: This section describes the basic auth for the web UI and security concerns.
+keywords: ["tools", "guide", "documents"]
+---
+
+<Note title="Notes" type="success">
+  In this documentation, it is important to note that Swagger is only available
+  in the `dev` environment.
+</Note>
+
+## Technical desitions
+
+This decision is made to facilitate API testing, documentation, and interaction during the development phase without exposing these features to production environments.
+
+Key Points:
+
+- Development Focus: Swagger's interactive UI and documentation tools are set up to support developers and testers as they build and refine the API. It allows for easy testing of endpoints, viewing of request/response structures, and validating API functionality in real-time.
+
+- Not for Production Use: For security reasons and to avoid exposing internal API details in production, Swagger is disabled in the production environment. This prevents unauthorized users from interacting with the API documentation and reduces the risk of security vulnerabilities.
+
+- Temporary Setup: The Swagger interface is intended to be used only during development or testing phases. Once the application is deployed to production, Swagger and its associated features will be inaccessible to end-users and external systems.
+
+- By limiting Swagger to the development environment, we ensure that API documentation and testing are streamlined while maintaining the security and integrity of the production environment.
+
+### Basic Authentication
+
+The WebUI requires the credentials below:
+
+```
+user:admin
+password:1234567890
+```
+
+Can be changed within `.env` file at `SWAGGER_PASSWORD` var

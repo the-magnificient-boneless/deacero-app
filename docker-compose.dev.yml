@@ -1,0 +1,269 @@
+version: "3.8"
+
+services:
+  eplatform:
+    container_name: alfred-app-eplatform
+    build: ./eplatform
+    ports:
+      - "3001:3001"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./eplatform:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - alfred-net
+    depends_on:
+      - mongo
+      - backend
+
+  documentation:
+    container_name: alfred-app-documentation
+    build: ./documents-simple-next-js-documentation
+    ports:
+      - "3002:3002"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./documents-simple-next-js-documentation:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - alfred-net
+    depends_on:
+      - mongo
+      - backend
+
+  backoffice:
+    container_name: alfred-app-backoffice
+    build: ./backoffice
+    ports:
+      - "5001:5001"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./backoffice:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - alfred-net
+    depends_on:
+      - mongo
+      - backend
+
+  backend:
+    container_name: alfred-app-backend
+    build: ./backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - alfred-net
+    environment:
+      - VAULT_ADDRESS=http://vault:8200
+      - VAULT_TOKEN=myroot
+      - ENVIRONMENT=dev
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - alfred-net
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - mongo-data:/data/db
+
+  mongo-importer:
+    image: mongo
+    container_name: mongo-importer
+    depends_on:
+      - mongo
+    command: >
+      bash -c "
+      sleep 360 &&
+      mongoimport --host mongo --db alfred-db --collection postalcodes --file ./src/dataload/postalcodes.bson --bson
+      "
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./data:/data
+    networks:
+      - alfred-net
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+      REDIS_HOST: redis-server
+    ports:
+      - "8081:8081"
+    networks:
+      - alfred-net
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - mongo-express-data:/app/data/mongo-express
+    depends_on:
+      - mongo
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=1y"
+      - "--web.enable-lifecycle"
+    networks:
+      - alfred-net
+    depends_on:
+      - cadvisor
+
+  mongodb-exporter:
+    image: bitnami/mongodb-exporter:0.20.6
+    container_name: mongodb-exporter
+    restart: unless-stopped
+    environment:
+      - MONGODB_URI=mongodb:mongodb:27017/admin?ssl=false
+    ports:
+      - "9216:9216"
+    networks:
+      - alfred-net
+    depends_on:
+      - mongo
+
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    restart: always
+    ports:
+      - "19999:19999"
+    environment:
+      - NETDATA_CLAIM_TOKEN=your_claim_token_here
+    depends_on:
+      - mongo
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "netdata.monitor=true"
+    networks:
+      - alfred-net
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($|/)"
+    networks:
+      - alfred-net
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:v0.47.1
+    privileged: true
+    platform: linux/aarch64
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /var/lib/dbus/machine-id:/var/lib/dbus/machine-id:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - alfred-net
+    restart: always
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - alfred-net
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    environment:
+      - TZ=America/Mexico_City # Usa la zona horaria adecuada
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./loki-config.yml:/etc/loki/loki-config.yaml
+    networks:
+      - alfred-net
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/log:/var/log # Mapea el directorio de logs del host al contenedor
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yaml
+    networks:
+      - alfred-net
+
+networks:
+  alfred-net:
+    driver: bridge
+
+volumes:
+  redis-data:
+  mongo-data:
+  mongo-express-data:
+  grafana-data:
+  vault-data:
+  prom_data:
